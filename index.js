@@ -50,6 +50,43 @@ mongoose
     const titles = outcome.map((eachRecipe) => eachRecipe.title);
     console.log(titles);
   })
+  // Iteration 4: Update recipe
+  .then(() => {
+    const query = {
+      title: 'Rigatoni alla Genovese'
+    };
+    Recipe.findOneAndUpdate(query, { $set: { duration: 100 } });
+  })
+  .then(() => {
+    console.log(
+      'Updated the "Rigatoni alla Genovese" recipe, to the new duration: 100'
+    );
+  })
+  // Iteration 5: remove a recipe
+  .then(() => {
+    const recipeToDelete = { title: 'Carrot Cake' };
+    Recipe.deleteOne(recipeToDelete).then(() => {
+      console.log('I deleted the Carrot Cake');
+    });
+  })
+  // Iteration 6: Close the database
+  .then(() => {
+    process.on('SIGINT', () => {
+      mongoose.connection.close(() => {
+        console.log(
+          'Mongoose default connection disconnected through app termination'
+        );
+        process.exit(0);
+      });
+    });
+  })
+
+  .catch((error) => {
+    console.log('Error deleting Carrot Cake', error);
+  })
+  .catch((error) => {
+    console.log('Error Updating the Rigatoni alla Genovese', error);
+  })
   .catch((error) => {
     console.error('Error connecting to the database', error);
   });
